@@ -1,11 +1,12 @@
 import os
 import sys
+
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
 import input
 
-if not(os.path.exists("input.txt")):
-    input.save_input(year = 2024, day = 1)
+if not (os.path.exists("input.txt")):
+    input.save_input(year=2024, day=1)
 
 left = []
 right = []
@@ -22,13 +23,13 @@ right.sort()
 distance = 0
 
 for left_elem, right_elem in zip(left, right):
-    distance += abs(left_elem-right_elem)
+    distance += abs(left_elem - right_elem)
 
     if left_elem in left_counter:
         left_counter[left_elem] += 1
     else:
         left_counter[left_elem] = 1
-    
+
     if right_elem in right_counter:
         right_counter[right_elem] += 1
     else:
