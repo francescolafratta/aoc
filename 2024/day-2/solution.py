@@ -9,6 +9,7 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=2)
 
+
 def validate_report(report: List[int]) -> bool:
     report_length = len(report)
 
@@ -18,13 +19,14 @@ def validate_report(report: List[int]) -> bool:
         if i == 0:
             first_diff = diff
 
-        if (abs_diff < 1 or abs_diff > 3):
+        if abs_diff < 1 or abs_diff > 3:
             return False
         if i > 0:
             if diff * first_diff < 0:
                 return False
 
     return True
+
 
 def validate_report_with_tolerance(report: List[int]) -> bool:
     result = validate_report(report)
@@ -40,6 +42,7 @@ def validate_report_with_tolerance(report: List[int]) -> bool:
             else:
                 report.insert(i, elem)
         return False
+
 
 valid_reports = 0
 valid_reports_with_tolerance = 0
