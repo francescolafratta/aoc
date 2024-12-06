@@ -1,6 +1,6 @@
 import os
-import sys
 import re
+import sys
 from typing import List
 
 target_dir = os.path.abspath("../../")
@@ -13,12 +13,13 @@ if not (os.path.exists("input.txt")):
 with open("input.txt", "r") as file:
     memory_string = file.read()
 
-def get_distance_from_closest(lst: List[int], target: int)->int:
+
+def get_distance_from_closest(lst: List[int], target: int) -> int:
     """
-        Returns distance between the target value and the largest element
-        in the list that is still smaller than the target.
-        Returns -1 if no such element is found.
-        Assumes the list is sorted and contains positive numbers only.
+    Returns distance between the target value and the largest element
+    in the list that is still smaller than the target.
+    Returns -1 if no such element is found.
+    Assumes the list is sorted and contains positive numbers only.
     """
     for index, elem in enumerate(lst):
         if elem > target:
@@ -28,15 +29,16 @@ def get_distance_from_closest(lst: List[int], target: int)->int:
                 return target - lst[index - 1]
     return target - lst[index]
 
+
 do_pattern = r"do[(][)]"
 dont_pattern = r"don't[(][)]"
 do_end_indexes = []
 dont_end_indexes = []
 
 for elem in re.finditer(do_pattern, memory_string):
-    do_end_indexes.append(elem.end()-1)
+    do_end_indexes.append(elem.end() - 1)
 for elem in re.finditer(dont_pattern, memory_string):
-    dont_end_indexes.append(elem.end()-1)
+    dont_end_indexes.append(elem.end() - 1)
 
 mul_pattern = r"mul[(][0-9]{1,3},[0-9]{1,3}[)]"
 total = 0
@@ -60,4 +62,4 @@ for elem in re.finditer(mul_pattern, memory_string):
             enabled_total += product
 
 print(total)
-print(enabled_total)    
+print(enabled_total)
