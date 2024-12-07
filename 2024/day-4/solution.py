@@ -67,26 +67,26 @@ def go_down_left(row, col, grid):
     return grid[row + 1][col - 1]
 
 
-def can_search_up(row, col, grid):
-    if row < 3:
+def can_search_up(row, col, grid, qty):
+    if row < qty:
         return False
     return True
 
 
-def can_search_down(row, col, grid):
-    if len(grid) - row < 4:
+def can_search_down(row, col, grid, qty):
+    if len(grid) - row < qty + 1:
         return False
     return True
 
 
-def can_search_right(row, col, grid):
-    if len(grid) - col < 4:
+def can_search_right(row, col, grid, qty):
+    if len(grid) - col < qty + 1:
         return False
     return True
 
 
-def can_search_left(row, col, grid):
-    if col < 3:
+def can_search_left(row, col, grid, qty):
+    if col < qty:
         return False
     return True
 
@@ -128,10 +128,10 @@ valid_permutations = [
 for rindex, row in enumerate(matrix):
     for cindex, elem in enumerate(row):
         if elem == "X":
-            up = can_search_up(rindex, cindex, matrix)
-            down = can_search_down(rindex, cindex, matrix)
-            right = can_search_right(rindex, cindex, matrix)
-            left = can_search_left(rindex, cindex, matrix)
+            up = can_search_up(rindex, cindex, matrix, 3)
+            down = can_search_down(rindex, cindex, matrix, 3)
+            right = can_search_right(rindex, cindex, matrix, 3)
+            left = can_search_left(rindex, cindex, matrix, 3)
             upright = can_search_up_right(rindex, cindex, matrix, 3)
             upleft = can_search_up_left(rindex, cindex, matrix, 3)
             downright = can_search_down_right(rindex, cindex, matrix, 3)
