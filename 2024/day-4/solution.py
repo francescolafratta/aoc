@@ -91,26 +91,26 @@ def can_search_left(row, col, grid):
     return True
 
 
-def can_search_up_right(row, col, grid):
-    if row < 3 or len(grid) - col < 4:
+def can_search_up_right(row, col, grid, qty):
+    if row < qty or len(grid) - col < qty + 1:
         return False
     return True
 
 
-def can_search_up_left(row, col, grid):
-    if row < 3 or col < 3:
+def can_search_up_left(row, col, grid, qty):
+    if row < qty or col < qty:
         return False
     return True
 
 
-def can_search_down_right(row, col, grid):
-    if len(grid) - col < 4 or len(grid) - row < 4:
+def can_search_down_right(row, col, grid, qty):
+    if len(grid) - col < qty + 1 or len(grid) - row < qty + 1:
         return False
     return True
 
 
-def can_search_down_left(row, col, grid):
-    if col < 3 or len(grid) - row < 4:
+def can_search_down_left(row, col, grid, qty):
+    if col < qty or len(grid) - row < qty + 1:
         return False
     return True
 
@@ -125,31 +125,6 @@ valid_permutations = [
     ["S", "S", "M", "M"],
 ]
 
-
-def can_search_up_right_by_one(row, col, grid):
-    if row < 1 or len(grid) - col < 2:
-        return False
-    return True
-
-
-def can_search_up_left_by_one(row, col, grid):
-    if row < 1 or col < 1:
-        return False
-    return True
-
-
-def can_search_down_right_by_one(row, col, grid):
-    if len(grid) - col < 2 or len(grid) - row < 2:
-        return False
-    return True
-
-
-def can_search_down_left_by_one(row, col, grid):
-    if col < 1 or len(grid) - row < 2:
-        return False
-    return True
-
-
 for rindex, row in enumerate(matrix):
     for cindex, elem in enumerate(row):
         if elem == "X":
@@ -157,10 +132,10 @@ for rindex, row in enumerate(matrix):
             down = can_search_down(rindex, cindex, matrix)
             right = can_search_right(rindex, cindex, matrix)
             left = can_search_left(rindex, cindex, matrix)
-            upright = can_search_up_right(rindex, cindex, matrix)
-            upleft = can_search_up_left(rindex, cindex, matrix)
-            downright = can_search_down_right(rindex, cindex, matrix)
-            downleft = can_search_down_left(rindex, cindex, matrix)
+            upright = can_search_up_right(rindex, cindex, matrix, 3)
+            upleft = can_search_up_left(rindex, cindex, matrix, 3)
+            downright = can_search_down_right(rindex, cindex, matrix, 3)
+            downleft = can_search_down_left(rindex, cindex, matrix, 3)
 
             if up:
                 for i in range(3):
@@ -226,10 +201,10 @@ for rindex, row in enumerate(matrix):
                 else:
                     total_words += 1
         elif elem == "A":
-            upright = can_search_up_right_by_one(rindex, cindex, matrix)
-            upleft = can_search_up_left_by_one(rindex, cindex, matrix)
-            downright = can_search_down_right_by_one(rindex, cindex, matrix)
-            downleft = can_search_down_left_by_one(rindex, cindex, matrix)
+            upright = can_search_up_right(rindex, cindex, matrix, 1)
+            upleft = can_search_up_left(rindex, cindex, matrix, 1)
+            downright = can_search_down_right(rindex, cindex, matrix, 1)
+            downleft = can_search_down_left(rindex, cindex, matrix, 1)
 
             if upright and upleft and downright and downleft:
                 result_upright = go_up_right(rindex, cindex, matrix)
