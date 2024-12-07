@@ -10,120 +10,120 @@ if not (os.path.exists("input.txt")):
 
 
 def go_up(row, col, grid, qty):
-    check_result = can_search_up(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_up(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row - i][col])
-    return result
+            moves.append(grid[row - i][col])
+    return moves
 
 
 def go_down(row, col, grid, qty):
-    check_result = can_search_down(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_down(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row + i][col])
-    return result
+            moves.append(grid[row + i][col])
+    return moves
 
 
 def go_right(row, col, grid, qty):
-    check_result = can_search_right(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_right(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row][col + i])
-    return result
+            moves.append(grid[row][col + i])
+    return moves
 
 
 def go_left(row, col, grid, qty):
-    check_result = can_search_left(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_left(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row][col - i])
-    return result
+            moves.append(grid[row][col - i])
+    return moves
 
 
 def go_up_right(row, col, grid, qty):
-    check_result = can_search_up_right(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_up_right(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row - i][col + i])
-    return result
+            moves.append(grid[row - i][col + i])
+    return moves
 
 
 def go_up_left(row, col, grid, qty):
-    check_result = can_search_up_left(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_up_left(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row - i][col - i])
-    return result
+            moves.append(grid[row - i][col - i])
+    return moves
 
 
 def go_down_right(row, col, grid, qty):
-    check_result = can_search_down_right(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_down_right(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row + i][col + i])
-    return result
+            moves.append(grid[row + i][col + i])
+    return moves
 
 
 def go_down_left(row, col, grid, qty):
-    check_result = can_search_down_left(row, col, grid, qty)
-    result = []
-    if check_result:
+    possible_move = can_move_down_left(row, col, grid, qty)
+    moves = []
+    if possible_move:
         for i in range(1, qty + 1):
-            result.append(grid[row + i][col - i])
-    return result
+            moves.append(grid[row + i][col - i])
+    return moves
 
 
-def can_search_up(row, col, grid, qty):
+def can_move_up(row, col, grid, qty):
     if row < qty:
         return False
     return True
 
 
-def can_search_down(row, col, grid, qty):
+def can_move_down(row, col, grid, qty):
     if len(grid) - row < qty + 1:
         return False
     return True
 
 
-def can_search_right(row, col, grid, qty):
+def can_move_right(row, col, grid, qty):
     if len(grid) - col < qty + 1:
         return False
     return True
 
 
-def can_search_left(row, col, grid, qty):
+def can_move_left(row, col, grid, qty):
     if col < qty:
         return False
     return True
 
 
-def can_search_up_right(row, col, grid, qty):
+def can_move_up_right(row, col, grid, qty):
     if row < qty or len(grid) - col < qty + 1:
         return False
     return True
 
 
-def can_search_up_left(row, col, grid, qty):
+def can_move_up_left(row, col, grid, qty):
     if row < qty or col < qty:
         return False
     return True
 
 
-def can_search_down_right(row, col, grid, qty):
+def can_move_down_right(row, col, grid, qty):
     if len(grid) - col < qty + 1 or len(grid) - row < qty + 1:
         return False
     return True
 
 
-def can_search_down_left(row, col, grid, qty):
+def can_move_down_left(row, col, grid, qty):
     if col < qty or len(grid) - row < qty + 1:
         return False
     return True
@@ -137,62 +137,63 @@ with open("input.txt", "r") as file:
         grid.append(row)
 
 
-valid_target = ["M", "A", "S"]
-total_words = 0
-total_xmas_words = 0
-valid_permutations = [
+mas_target = ["M", "A", "S"]
+permutation_targets = [
     ["S", "M", "S", "M"],
     ["M", "S", "M", "S"],
     ["M", "M", "S", "S"],
     ["S", "S", "M", "M"],
 ]
+xmas_words = 0
+xshape_words = 0
 
-for rindex, row in enumerate(grid):
-    for cindex, elem in enumerate(row):
+
+for row_index, row in enumerate(grid):
+    for col_index, elem in enumerate(row):
         if elem == "X":
-            up = go_up(rindex, cindex, grid, 3)
-            down = go_down(rindex, cindex, grid, 3)
-            right = go_right(rindex, cindex, grid, 3)
-            left = go_left(rindex, cindex, grid, 3)
-            upright = go_up_right(rindex, cindex, grid, 3)
-            upleft = go_up_left(rindex, cindex, grid, 3)
-            downright = go_down_right(rindex, cindex, grid, 3)
-            downleft = go_down_left(rindex, cindex, grid, 3)
+            up = go_up(row_index, col_index, grid, 3)
+            down = go_down(row_index, col_index, grid, 3)
+            right = go_right(row_index, col_index, grid, 3)
+            left = go_left(row_index, col_index, grid, 3)
+            upright = go_up_right(row_index, col_index, grid, 3)
+            upleft = go_up_left(row_index, col_index, grid, 3)
+            downright = go_down_right(row_index, col_index, grid, 3)
+            downleft = go_down_left(row_index, col_index, grid, 3)
 
-            if up == valid_target:
-                total_words += 1
+            if up == mas_target:
+                xmas_words += 1
 
-            if down == valid_target:
-                total_words += 1
+            if down == mas_target:
+                xmas_words += 1
 
-            if right == valid_target:
-                total_words += 1
+            if right == mas_target:
+                xmas_words += 1
 
-            if left == valid_target:
-                total_words += 1
+            if left == mas_target:
+                xmas_words += 1
 
-            if upright == valid_target:
-                total_words += 1
+            if upright == mas_target:
+                xmas_words += 1
 
-            if upleft == valid_target:
-                total_words += 1
+            if upleft == mas_target:
+                xmas_words += 1
 
-            if downright == valid_target:
-                total_words += 1
+            if downright == mas_target:
+                xmas_words += 1
 
-            if downleft == valid_target:
-                total_words += 1
+            if downleft == mas_target:
+                xmas_words += 1
         elif elem == "A":
-            upright = go_up_right(rindex, cindex, grid, 1)
-            upleft = go_up_left(rindex, cindex, grid, 1)
-            downright = go_down_right(rindex, cindex, grid, 1)
-            downleft = go_down_left(rindex, cindex, grid, 1)
+            upright = go_up_right(row_index, col_index, grid, 1)
+            upleft = go_up_left(row_index, col_index, grid, 1)
+            downright = go_down_right(row_index, col_index, grid, 1)
+            downleft = go_down_left(row_index, col_index, grid, 1)
 
             if upright and upleft and downright and downleft:
-                result_list = upright + upleft + downright + downleft
-                if result_list in valid_permutations:
-                    total_xmas_words += 1
+                move_results = upright + upleft + downright + downleft
+                if move_results in permutation_targets:
+                    xshape_words += 1
 
 
-print(total_words)
-print(total_xmas_words)
+print(xmas_words)
+print(xshape_words)
