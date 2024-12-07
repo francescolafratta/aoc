@@ -8,14 +8,6 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=4)
 
-grid = []
-
-with open("input.txt", "r") as file:
-    for line in file:
-        stripped_line = line.rstrip()
-        line_list = list(stripped_line)
-        grid.append(line_list)
-
 
 def go_up(row, col, grid, qty):
     check_result = can_search_up(row, col, grid, qty)
@@ -135,6 +127,14 @@ def can_search_down_left(row, col, grid, qty):
     if col < qty or len(grid) - row < qty + 1:
         return False
     return True
+
+
+grid = []
+
+with open("input.txt", "r") as file:
+    for line in file:
+        row = list(line.rstrip())
+        grid.append(row)
 
 
 valid_target = ["M", "A", "S"]
