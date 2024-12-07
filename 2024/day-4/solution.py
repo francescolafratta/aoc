@@ -8,15 +8,13 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=4)
 
-matrix = []
+grid = []
 
 with open("input.txt", "r") as file:
     for line in file:
-        line_list = []
-        for elem in line:
-            line_list.append(elem)
-        line_list.pop()
-        matrix.append(line_list)
+        stripped_line = line.rstrip()
+        line_list = list(stripped_line)
+        grid.append(line_list)
 
 
 def go_up(row, col, grid, qty):
@@ -149,17 +147,17 @@ valid_permutations = [
     ["S", "S", "M", "M"],
 ]
 
-for rindex, row in enumerate(matrix):
+for rindex, row in enumerate(grid):
     for cindex, elem in enumerate(row):
         if elem == "X":
-            up = go_up(rindex, cindex, matrix, 3)
-            down = go_down(rindex, cindex, matrix, 3)
-            right = go_right(rindex, cindex, matrix, 3)
-            left = go_left(rindex, cindex, matrix, 3)
-            upright = go_up_right(rindex, cindex, matrix, 3)
-            upleft = go_up_left(rindex, cindex, matrix, 3)
-            downright = go_down_right(rindex, cindex, matrix, 3)
-            downleft = go_down_left(rindex, cindex, matrix, 3)
+            up = go_up(rindex, cindex, grid, 3)
+            down = go_down(rindex, cindex, grid, 3)
+            right = go_right(rindex, cindex, grid, 3)
+            left = go_left(rindex, cindex, grid, 3)
+            upright = go_up_right(rindex, cindex, grid, 3)
+            upleft = go_up_left(rindex, cindex, grid, 3)
+            downright = go_down_right(rindex, cindex, grid, 3)
+            downleft = go_down_left(rindex, cindex, grid, 3)
 
             if up == valid_target:
                 total_words += 1
@@ -185,10 +183,10 @@ for rindex, row in enumerate(matrix):
             if downleft == valid_target:
                 total_words += 1
         elif elem == "A":
-            upright = go_up_right(rindex, cindex, matrix, 1)
-            upleft = go_up_left(rindex, cindex, matrix, 1)
-            downright = go_down_right(rindex, cindex, matrix, 1)
-            downleft = go_down_left(rindex, cindex, matrix, 1)
+            upright = go_up_right(rindex, cindex, grid, 1)
+            upleft = go_up_left(rindex, cindex, grid, 1)
+            downright = go_down_right(rindex, cindex, grid, 1)
+            downleft = go_down_left(rindex, cindex, grid, 1)
 
             if upright and upleft and downright and downleft:
                 result_list = upright + upleft + downright + downleft
