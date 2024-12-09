@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import List
 
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
@@ -9,7 +10,7 @@ if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=5)
 
 
-def order_update(update):
+def order_update(update: List[str]) -> List[str]:
     ordered_update = update.copy()
     update_set = set(update)
     for page in update:
@@ -20,7 +21,7 @@ def order_update(update):
     return ordered_update
 
 
-def is_ordered(update):
+def is_ordered(update: List[str]) -> bool:
     length = len(update)
     for i in range(length - 1):
         for j in range(i + 1, length):
