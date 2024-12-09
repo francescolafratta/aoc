@@ -8,49 +8,51 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=5)
 
-precedence = {}
-sum_middle_numbers = 0
-sum_sorted = 0
+def order_update(update):
+    ordered_update = update.copy()
+    update_set = set(update)
+    for page in update:
+        preceding_elements = set(ordering_rules[page])
+        preceding_elements_in_update = update_set.intersection(preceding_elements)
+        preceding_element_count = len(preceding_elements_in_update)
+        ordered_update[preceding_element_count] = page
+    return ordered_update
 
-def process_uncorrect(report):
-    result = report.copy()
-    myset = set(report)
-    for elem in report:
-        myset.remove(elem)
-        preceds = set(precedence[elem])
-        inter = myset.intersection(preceds)
-        length = len(inter)
-        result[length] = elem
-        myset.add(elem)
-    return result
+def is_ordered(update):
+    length = len(update)
+    for i in range(length - 1):
+        for j in range(i + 1, length):
+            if update[j] in ordering_rules[update[i]]:
+                return False
+    return True
 
+ordering_rules = {}
+sum_middle_pages_in_ordered_updates = 0
+sum_middle_pages_in_unordered_updates = 0        
 
 with open("input.txt", "r") as file:
-    page_ordering = True
+    page_ordering_text = True
     for line in file:
         if line == "\n":
-            page_ordering = False
+            page_ordering_text = False
             continue
-        if page_ordering:
-            prev, cons = line.rstrip().split("|")
-            if cons in precedence:
-                precedence[cons].append(prev)
+        if page_ordering_text:
+            preceding, following = line.rstrip().split("|")
+            if following in ordering_rules:
+                ordering_rules[following].append(preceding)
             else:
-                precedence[cons] = [prev]
+                ordering_rules[following] = [preceding]
         else:
-            stripped_line = line.rstrip().split(",")
-            length = len(stripped_line)
+            update = line.rstrip().split(",")
+            length = len(update)
             middle_index = int(length/2)
-            correct_report = True
-            for i in range(length - 1):
-                for j in range(i + 1, length):
-                    if stripped_line[j] in precedence[stripped_line[i]]:
-                        correct_report = False
-            if correct_report:
-                sum_middle_numbers += int(stripped_line[middle_index])
+            ordered = is_ordered(update)
+
+            if ordered:
+                sum_middle_pages_in_ordered_updates += int(update[middle_index])
             else:
-                result = process_uncorrect(stripped_line)
-                sum_sorted += int(result[middle_index])
+                ordered_update = order_update(update)
+                sum_middle_pages_in_unordered_updates += int(ordered_update[middle_index])
                     
-print(sum_middle_numbers)
-print(sum_sorted)
+print(sum_middle_pages_in_ordered_updates)
+print(sum_middle_pages_in_unordered_updates)
