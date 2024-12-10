@@ -17,29 +17,28 @@ with open("input.txt", "r") as file:
         grid.append(row)
 
 
-def start_route(row, col, grid):
+def execute_route(row, col, grid):
+    length = len(grid)
     cycler = itertools.cycle([(-1, 0), (0, 1), (1, 0), (0, -1)])
-    dir = next(cycler)
-    x_shift, y_shift = dir
+    x_shift, y_shift = next(cycler)
     route = [(row, col)]
     obstacles = {(-1, 0): [], (0, 1): [], (1, 0): [], (0, -1): []}
     loop = False
     while True:
         if (
             row + x_shift < 0
-            or row + x_shift >= len(grid)
+            or row + x_shift >= length
             or col + y_shift < 0
-            or col + y_shift >= len(grid)
+            or col + y_shift >= length
         ):
             break
         if grid[row + x_shift][col + y_shift] == "#":
-            if (row + x_shift, col + y_shift) in obstacles[dir]:
+            if (row + x_shift, col + y_shift) in obstacles[x_shift, y_shift]:
                 loop = True
                 break
             else:
-                obstacles[dir].append((row + x_shift, col + y_shift))
-            dir = next(cycler)
-            x_shift, y_shift = dir
+                obstacles[x_shift, y_shift].append((row + x_shift, col + y_shift))
+            x_shift, y_shift = next(cycler)
         else:
             row = row + x_shift
             col = col + y_shift
@@ -50,20 +49,19 @@ def start_route(row, col, grid):
 for row_index, row in enumerate(grid):
     for col_index, elem in enumerate(row):
         if elem == "^":
-            routes, loopt = start_route(row_index, col_index, grid)
+            routes, is_loop = execute_route(row_index, col_index, grid)
             print(len(set(routes)))
-            print(loopt)
-            sentinel = row_index, col_index
+            start_x, start_y = row_index, col_index
 
-count = 0
+count_obstacle_loops = 0
 
 for row_index, row in enumerate(grid):
     for col_index, elem in enumerate(row):
         if elem == ".":
             grid[row_index][col_index] = "#"
-            routesadd, loopadd = start_route(sentinel[0], sentinel[1], grid)
-            if loopadd:
-                count += 1
+            routes, is_loop = execute_route(start_x, start_y, grid)
+            if is_loop:
+                count_obstacle_loops += 1
             grid[row_index][col_index] = "."
 
-print(count)
+print(count_obstacle_loops)
