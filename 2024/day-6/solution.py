@@ -1,6 +1,6 @@
+import itertools
 import os
 import sys
-import itertools
 
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
@@ -16,22 +16,28 @@ with open("input.txt", "r") as file:
         row = list(line.rstrip())
         grid.append(row)
 
+
 def start_route(row, col, grid):
     cycler = itertools.cycle([(-1, 0), (0, 1), (1, 0), (0, -1)])
     dir = next(cycler)
     x_shift, y_shift = dir
     route = [(row, col)]
-    obstacles = {(-1, 0): [], (0, 1):[], (1,0):[], (0,-1):[]}
+    obstacles = {(-1, 0): [], (0, 1): [], (1, 0): [], (0, -1): []}
     loop = False
     while True:
-        if row + x_shift < 0 or row + x_shift >= len(grid) or col + y_shift <0 or col + y_shift >= len(grid):
+        if (
+            row + x_shift < 0
+            or row + x_shift >= len(grid)
+            or col + y_shift < 0
+            or col + y_shift >= len(grid)
+        ):
             break
-        if grid[row+x_shift][col+y_shift] == "#":
-            if (row+x_shift, col+y_shift) in obstacles[dir]:
+        if grid[row + x_shift][col + y_shift] == "#":
+            if (row + x_shift, col + y_shift) in obstacles[dir]:
                 loop = True
                 break
             else:
-                obstacles[dir].append((row+x_shift, col+y_shift))
+                obstacles[dir].append((row + x_shift, col + y_shift))
             dir = next(cycler)
             x_shift, y_shift = dir
         else:
@@ -53,11 +59,11 @@ count = 0
 
 for row_index, row in enumerate(grid):
     for col_index, elem in enumerate(row):
-        if elem ==".":
+        if elem == ".":
             grid[row_index][col_index] = "#"
             routesadd, loopadd = start_route(sentinel[0], sentinel[1], grid)
             if loopadd:
-                count+= 1
+                count += 1
             grid[row_index][col_index] = "."
 
 print(count)
