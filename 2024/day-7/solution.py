@@ -24,25 +24,21 @@ def treefy(listy, target):
     tree.create_node(identifier = 2, data = first*second, parent = 0)
     length = len(listy)
     final_depth_level = length - 1
-    if length > 2:
-        depthy = 1
-        identifier = 3
+    current_depth = tree.depth()
+    if final_depth_level > current_depth:
         for index, val in enumerate(listy[2:]):
-            filtered_nodes = tree.filter_nodes(lambda node: filter_by_depth(node, depthy, target, tree))
+            filtered_nodes = tree.filter_nodes(lambda node: filter_by_depth(node, current_depth, target, tree))
             changes = []
             for node in filtered_nodes:
                 parent = node.identifier
                 data = val + node.data
-                changes.append((parent,data,identifier))
-                identifier+=1
+                changes.append((parent,data))
                 data_mult = val * node.data
-                changes.append((parent, data_mult, identifier))
-                identifier+=1
-            depthy+=1
-            for parent, data, id in changes:
-                tree.create_node(parent = parent, data = data, identifier=id)
+                changes.append((parent, data_mult))
+            for parent, data in changes:
+                tree.create_node(parent = parent, data = data)
+            current_depth += 1
     
-    #print(tree.show(stdout = False))
     filtered_final = tree.filter_nodes(lambda node: filter_by_final_level(node, tree))
     for node in filtered_final:
         if node.data == target:
@@ -65,5 +61,5 @@ print(count)
 
 
 
-#kappa = treefy([15, 6], 156)   
-#print(kappa)
+kappa = treefy([81, 40, 27], 3267)   
+print(kappa)
