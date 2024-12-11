@@ -9,44 +9,56 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=7)
 
-def filter_by_depth(node, depth, target, tree):
-    return tree.depth(node) == depth and node.data <= target
-
-def filter_by_final_level(node, tree):
-    return tree.depth() == tree.depth(node)
-
 def treefy(listy, target):
-    tree = Tree()
-    tree.create_node(identifier = 0, data = 0)
+    grid = []
     first = listy[0]
     second = listy[1]
-    tree.create_node(identifier = 1, data = first+second, parent = 0)
-    tree.create_node(identifier = 2, data = first*second, parent = 0)
+    grid.append([first + second, first * second])
     length = len(listy)
     final_depth_level = length - 1
-    current_depth = tree.depth()
+    current_depth = 0
     if final_depth_level > current_depth:
         for index, val in enumerate(listy[2:]):
-            filtered_nodes = tree.filter_nodes(lambda node: filter_by_depth(node, current_depth, target, tree))
             changes = []
-            for node in filtered_nodes:
-                parent = node.identifier
-                data = val + node.data
-                changes.append((parent,data))
-                data_mult = val * node.data
-                changes.append((parent, data_mult))
-            for parent, data in changes:
-                tree.create_node(parent = parent, data = data)
+            for elem in grid[current_depth]:
+                valsum = val + elem
+                valmult = val * elem
+                changes.extend([valsum, valmult])
+            grid.append(changes)
             current_depth += 1
-    
-    filtered_final = tree.filter_nodes(lambda node: filter_by_final_level(node, tree))
-    for node in filtered_final:
-        if node.data == target:
+    final = grid[-1]
+    for elem in final:
+        if elem == target:
             return True
     return False
 
+    
+def treefy_concat(listy, target):
+    grid = []
+    first = listy[0]
+    second = listy[1]
+    grid.append([first+second, first*second, int(str(first)+str(second))])
+    length = len(listy)
+    final_depth_level = length - 1
+    current_depth = 0
+    if final_depth_level > current_depth:
+        for index, val in enumerate(listy[2:]):
+            changes = []
+            for elem in grid[current_depth]:
+                valsum = val + elem
+                valmult = val*elem
+                valconcat = int(str(elem) + str(val))
+                changes.extend([valsum, valmult, valconcat])
+            grid.append(changes)
+            current_depth+=1
+        final = grid[-1]
+        for elem in final:
+            if elem == target:
+                return True
+        return False
 
 count = 0
+count_concat = 0
 with open("input.txt", "r") as file:
     for line in file:
         before, match, after = line.rstrip().partition(": ")
@@ -55,10 +67,15 @@ with open("input.txt", "r") as file:
         result = treefy(new[1:], new[0])
         if result:
             count+= new[0]
+        else:
+            result_concat = treefy_concat(new[1:], new[0])
+            if result_concat:
+                count_concat += new[0]
+
 
 print(new)
 print(count)
-
+print(count+count_concat)
 
 
 kappa = treefy([81, 40, 27], 3267)   
