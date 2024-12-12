@@ -1,7 +1,6 @@
 import os
 import sys
-import itertools
-from treelib import Node, Tree
+
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
 import input
@@ -9,74 +8,52 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=7)
 
-def treefy(listy, target):
-    grid = []
-    first = listy[0]
-    second = listy[1]
-    grid.append([first + second, first * second])
-    length = len(listy)
+
+def check_equation(members, target, concat):
+    solution_tree = []
+    first, second, *rest = members
+    starting_options = first + second, first * second
+    if concat:
+        concat_result = int(str(first) + str(second))
+        starting_options += (concat_result,)
+    solution_tree.append(list(starting_options))
+    length = len(members)
     final_depth_level = length - 1
     current_depth = 0
     if final_depth_level > current_depth:
-        for index, val in enumerate(listy[2:]):
+        for val in rest:
             changes = []
-            for elem in grid[current_depth]:
-                valsum = val + elem
-                valmult = val * elem
-                changes.extend([valsum, valmult])
-            grid.append(changes)
+            for elem in solution_tree[current_depth]:
+                options = val + elem, val * elem
+                if concat:
+                    concat_result = int(str(elem) + str(val))
+                    options += (concat_result,)
+                changes.extend([option for option in options if option <= target])
+            solution_tree.append(changes)
             current_depth += 1
-    final = grid[-1]
+    final = solution_tree[-1]
     for elem in final:
         if elem == target:
             return True
     return False
 
-    
-def treefy_concat(listy, target):
-    grid = []
-    first = listy[0]
-    second = listy[1]
-    grid.append([first+second, first*second, int(str(first)+str(second))])
-    length = len(listy)
-    final_depth_level = length - 1
-    current_depth = 0
-    if final_depth_level > current_depth:
-        for index, val in enumerate(listy[2:]):
-            changes = []
-            for elem in grid[current_depth]:
-                valsum = val + elem
-                valmult = val*elem
-                valconcat = int(str(elem) + str(val))
-                changes.extend([valsum, valmult, valconcat])
-            grid.append(changes)
-            current_depth+=1
-        final = grid[-1]
-        for elem in final:
-            if elem == target:
-                return True
-        return False
 
-count = 0
-count_concat = 0
+calibration_result = 0
+calibration_result_concat = 0
 with open("input.txt", "r") as file:
     for line in file:
-        before, match, after = line.rstrip().partition(": ")
-        new = [before] + after.split(" ")
-        new = [int(elem) for elem in new]
-        result = treefy(new[1:], new[0])
-        if result:
-            count+= new[0]
+        before, separator, after = line.rstrip().partition(": ")
+        target = int(before)
+        equation_members = after.split(" ")
+        equation_members = [int(member) for member in equation_members]
+        is_equation_true = check_equation(equation_members, target, False)
+        if is_equation_true:
+            calibration_result += target
         else:
-            result_concat = treefy_concat(new[1:], new[0])
-            if result_concat:
-                count_concat += new[0]
+            is_equation_true_concat = check_equation(equation_members, target, True)
+            if is_equation_true_concat:
+                calibration_result_concat += target
 
 
-print(new)
-print(count)
-print(count+count_concat)
-
-
-kappa = treefy([81, 40, 27], 3267)   
-print(kappa)
+print(calibration_result)
+print(calibration_result + calibration_result_concat)
