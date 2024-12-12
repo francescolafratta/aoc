@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import List
 
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
@@ -9,7 +10,7 @@ if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=7)
 
 
-def check_equation(members, target, concat):
+def check_equation(members: List[int], target: int, concat: bool) -> bool:
     solution_tree = []
     first, second, *rest = members
     starting_options = first + second, first * second
