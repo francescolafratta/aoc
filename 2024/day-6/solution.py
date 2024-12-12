@@ -50,18 +50,17 @@ for row_index, row in enumerate(grid):
     for col_index, elem in enumerate(row):
         if elem == "^":
             routes, is_loop = execute_route(row_index, col_index, grid)
-            print(len(set(routes)))
             start_x, start_y = row_index, col_index
 
+unique_locations_in_route = set(routes)
+print(len(unique_locations_in_route))
+unique_locations_in_route.remove((start_x, start_y))
 count_obstacle_loops = 0
-
-for row_index, row in enumerate(grid):
-    for col_index, elem in enumerate(row):
-        if elem == ".":
-            grid[row_index][col_index] = "#"
-            routes, is_loop = execute_route(start_x, start_y, grid)
-            if is_loop:
-                count_obstacle_loops += 1
-            grid[row_index][col_index] = "."
+for row, col in unique_locations_in_route:
+    grid[row][col] = "#"
+    routes, is_loop = execute_route(start_x, start_y, grid)
+    if is_loop:
+        count_obstacle_loops += 1
+    grid[row][col] = "."
 
 print(count_obstacle_loops)
