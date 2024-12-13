@@ -1,6 +1,8 @@
 import itertools
 import os
 import sys
+from dataclasses import dataclass
+from typing import List, Tuple
 
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
@@ -9,93 +11,86 @@ import input
 if not (os.path.exists("input.txt")):
     input.save_input(year=2024, day=8)
 
-antennas = {}
-grid = []
 
-with open("input.txt", "r") as file:
-    for index, line in enumerate(file):
-        stripped_line = list(line.rstrip())
-        grid.append(stripped_line)
-        for cindex, elem in enumerate(stripped_line):
-            if elem != ".":
-                if elem in antennas:
-                    antennas[elem].append((index, cindex))
-                else:
-                    antennas[elem] = [(index, cindex)]
+@dataclass(frozen=True)
+class Point:
+    row: int
+    col: int
 
 
-def check_coords(x, y):
-    length = len(grid)
-    if x < 0 or y < 0 or x >= length or y >= length:
+def is_within_grid(p: Point) -> bool:
+    if p.row < 0 or p.col < 0 or p.row >= length or p.col >= length:
         return False
     return True
 
 
-def get_shift(row1, col1, row2, col2):
-    shiftrow = row1 - row2
-    shiftcol = col1 - col2
-
-    return shiftrow, shiftcol
+def get_shift(p1: Point, p2: Point) -> Point:
+    return Point(p1.row - p2.row, p1.col - p2.col)
 
 
-def shift_points(row1, col1, row2, col2, shiftrow, shiftcol):
-    newrow1 = row1 + shiftrow
-    newcol1 = col1 + shiftcol
-
-    newrow2 = row2 - shiftrow
-    newcol2 = col2 - shiftcol
-
-    p1 = newrow1, newcol1
-    p2 = newrow2, newcol2
-
+def shift_points(p1: Point, p2: Point, shift: Point) -> Tuple[Point, Point]:
+    p1 = Point(p1.row + shift.row, p1.col + shift.col)
+    p2 = Point(p2.row - shift.row, p2.col - shift.col)
     return p1, p2
 
 
-def get_antinodes(t1, t2, expanded):
-    row1, col1 = t1
-    row2, col2 = t2
-
-    shiftrow, shiftcol = get_shift(row1, col1, row2, col2)
+def get_antinodes(p1: Point, p2: Point, expanded: bool) -> List[Point]:
+    shift = get_shift(p1, p2)
 
     results = []
     if expanded:
-        results.append(t1)
-        results.append(t2)
+        results.append(p1)
+        results.append(p2)
 
-    valid1 = True
-    valid2 = True
+    within1 = True
+    within2 = True
 
-    while valid1 or valid2:
+    while within1 or within2:
         if not expanded:
-            valid1 = False
-            valid2 = False
-        shifted_points = shift_points(row1, col1, row2, col2, shiftrow, shiftcol)
-        newp1, newp2 = shifted_points
-        row1, col1 = newp1
-        row2, col2 = newp2
-        validt1 = check_coords(newp1[0], newp1[1])
-        validt2 = check_coords(newp2[0], newp2[1])
+            within1 = False
+            within2 = False
+        p1, p2 = shift_points(p1, p2, shift)
+
+        validt1 = is_within_grid(p1)
+        validt2 = is_within_grid(p2)
 
         if validt1:
-            results.append(newp1)
+            results.append(p1)
         else:
-            valid1 = False
+            within1 = False
         if validt2:
-            results.append(newp2)
+            results.append(p2)
         else:
-            valid2 = False
+            within2 = False
 
     return results
+
+
+antennas = {}
+grid = []
+
+with open("input.txt", "r") as file:
+    for row, line in enumerate(file):
+        stripped_line = list(line.rstrip())
+        grid.append(stripped_line)
+        for col, elem in enumerate(stripped_line):
+            if elem != ".":
+                if elem in antennas:
+                    antennas[elem].append((row, col))
+                else:
+                    antennas[elem] = [(row, col)]
+
+length = len(grid)
 
 
 antinodes = []
 antinodes_expanded = []
 
 for key in antennas:
-    itert = itertools.combinations(antennas[key], 2)
-    for t1, t2 in itert:
-        mimi = get_antinodes(t1, t2, False)
-        mimi_expand = get_antinodes(t1, t2, True)
+    iterator = itertools.combinations(antennas[key], 2)
+    for t1, t2 in iterator:
+        mimi = get_antinodes(Point(*t1), Point(*t2), False)
+        mimi_expand = get_antinodes(Point(*t1), Point(*t2), True)
         if mimi:
             antinodes.extend(mimi)
         if mimi_expand:
