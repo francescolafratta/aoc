@@ -37,33 +37,33 @@ def shift_points(p1: Point, p2: Point, shift: Point) -> Tuple[Point, Point]:
 def get_antinodes(p1: Point, p2: Point, expanded: bool) -> List[Point]:
     shift = get_shift(p1, p2)
 
-    results = []
+    antinodes = []
     if expanded:
-        results.append(p1)
-        results.append(p2)
+        antinodes.append(p1)
+        antinodes.append(p2)
 
-    within1 = True
-    within2 = True
+    continue_checking_p1 = True
+    continue_checking_p2 = True
 
-    while within1 or within2:
+    while continue_checking_p1 or continue_checking_p2:
         if not expanded:
-            within1 = False
-            within2 = False
+            continue_checking_p1 = False
+            continue_checking_p2 = False
         p1, p2 = shift_points(p1, p2, shift)
 
-        validt1 = is_within_grid(p1)
-        validt2 = is_within_grid(p2)
+        valid_shift_one = is_within_grid(p1)
+        valid_shift_two = is_within_grid(p2)
 
-        if validt1:
-            results.append(p1)
+        if valid_shift_one:
+            antinodes.append(p1)
         else:
-            within1 = False
-        if validt2:
-            results.append(p2)
+            continue_checking_p1 = False
+        if valid_shift_two:
+            antinodes.append(p2)
         else:
-            within2 = False
+            continue_checking_p2 = False
 
-    return results
+    return antinodes
 
 
 antennas = {}
@@ -89,12 +89,12 @@ antinodes_expanded = []
 for key in antennas:
     iterator = itertools.combinations(antennas[key], 2)
     for p1, p2 in iterator:
-        mimi = get_antinodes(p1, p2, False)
-        mimi_expand = get_antinodes(p1, p2, True)
-        if mimi:
-            antinodes.extend(mimi)
-        if mimi_expand:
-            antinodes_expanded.extend(mimi_expand)
+        couple_antinodes = get_antinodes(p1, p2, False)
+        couple_antinodes_expanded = get_antinodes(p1, p2, True)
+        if couple_antinodes:
+            antinodes.extend(couple_antinodes)
+        if couple_antinodes_expanded:
+            antinodes_expanded.extend(couple_antinodes_expanded)
 
 
 unique_antinode_locations = set(antinodes)
