@@ -76,9 +76,9 @@ with open("input.txt", "r") as file:
         for col, elem in enumerate(stripped_line):
             if elem != ".":
                 if elem in antennas:
-                    antennas[elem].append((row, col))
+                    antennas[elem].append(Point(row, col))
                 else:
-                    antennas[elem] = [(row, col)]
+                    antennas[elem] = [Point(row, col)]
 
 length = len(grid)
 
@@ -88,9 +88,9 @@ antinodes_expanded = []
 
 for key in antennas:
     iterator = itertools.combinations(antennas[key], 2)
-    for t1, t2 in iterator:
-        mimi = get_antinodes(Point(*t1), Point(*t2), False)
-        mimi_expand = get_antinodes(Point(*t1), Point(*t2), True)
+    for p1, p2 in iterator:
+        mimi = get_antinodes(p1, p2, False)
+        mimi_expand = get_antinodes(p1, p2, True)
         if mimi:
             antinodes.extend(mimi)
         if mimi_expand:
