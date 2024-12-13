@@ -1,6 +1,6 @@
+import itertools
 import os
 import sys
-import itertools
 
 target_dir = os.path.abspath("../../")
 sys.path.insert(0, target_dir)
@@ -23,36 +23,39 @@ with open("input.txt", "r") as file:
                 else:
                     antennas[elem] = [(index, cindex)]
 
+
 def check_coords(x, y):
     length = len(grid)
-    if x < 0 or y < 0 or x >= length or y >=length:
+    if x < 0 or y < 0 or x >= length or y >= length:
         return False
     return True
 
-def get_shift(row1,col1,row2,col2):
-    shiftrow = row1-row2
-    shiftcol = col1-col2
 
-    return shiftrow,shiftcol
+def get_shift(row1, col1, row2, col2):
+    shiftrow = row1 - row2
+    shiftcol = col1 - col2
 
-def shift_points(row1,col1,row2,col2, shiftrow,shiftcol):
-    newrow1 = row1+shiftrow
-    newcol1 = col1+shiftcol
+    return shiftrow, shiftcol
 
-    newrow2= row2-shiftrow
-    newcol2 = col2-shiftcol
 
-    p1 = newrow1,newcol1
-    p2 = newrow2,newcol2
+def shift_points(row1, col1, row2, col2, shiftrow, shiftcol):
+    newrow1 = row1 + shiftrow
+    newcol1 = col1 + shiftcol
 
-    return p1,p2
-    
+    newrow2 = row2 - shiftrow
+    newcol2 = col2 - shiftcol
+
+    p1 = newrow1, newcol1
+    p2 = newrow2, newcol2
+
+    return p1, p2
+
 
 def get_antinodes(t1, t2, expanded):
     row1, col1 = t1
     row2, col2 = t2
 
-    shiftrow,shiftcol = get_shift(row1,col1,row2,col2)
+    shiftrow, shiftcol = get_shift(row1, col1, row2, col2)
 
     results = []
     if expanded:
@@ -66,7 +69,7 @@ def get_antinodes(t1, t2, expanded):
         if not expanded:
             valid1 = False
             valid2 = False
-        shifted_points = shift_points(row1,col1,row2,col2,shiftrow,shiftcol)
+        shifted_points = shift_points(row1, col1, row2, col2, shiftrow, shiftcol)
         newp1, newp2 = shifted_points
         row1, col1 = newp1
         row2, col2 = newp2
@@ -84,8 +87,9 @@ def get_antinodes(t1, t2, expanded):
 
     return results
 
+
 antinodes = []
-antinodes_expanded =[]
+antinodes_expanded = []
 
 for key in antennas:
     itert = itertools.combinations(antennas[key], 2)
