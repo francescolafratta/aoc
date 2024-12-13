@@ -29,10 +29,13 @@ def check_coords(x, y):
         return False
     return True
 
-def shift_points(row1,col1,row2,col2):
+def get_shift(row1,col1,row2,col2):
     shiftrow = row1-row2
     shiftcol = col1-col2
 
+    return shiftrow,shiftcol
+
+def shift_points(row1,col1,row2,col2, shiftrow,shiftcol):
     newrow1 = row1+shiftrow
     newcol1 = col1+shiftcol
 
@@ -49,6 +52,8 @@ def get_antinodes(t1, t2, expanded):
     row1, col1 = t1
     row2, col2 = t2
 
+    shiftrow,shiftcol = get_shift(row1,col1,row2,col2)
+
     results = []
     if expanded:
         results.append(t1)
@@ -61,7 +66,7 @@ def get_antinodes(t1, t2, expanded):
         if not expanded:
             valid1 = False
             valid2 = False
-        shifted_points = shift_points(row1,col1,row2,col2)
+        shifted_points = shift_points(row1,col1,row2,col2,shiftrow,shiftcol)
         newp1, newp2 = shifted_points
         row1, col1 = newp1
         row2, col2 = newp2
